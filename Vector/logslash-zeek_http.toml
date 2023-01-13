@@ -1,0 +1,90 @@
+# Copywrite (c) 2023, FoxIO, LLC.
+# All rights reserved.
+# US Patent No. 10,877,972
+# Licenced under the FoxIO License 1.0
+# For full license text, see LICENSE file in the repo root or https://github.com/FoxIO-LLC/LogSlash/blob/main/LICENSE
+
+[sources.in]
+# Define your source here. https://vector.dev/docs/reference/configuration/sources/
+type = "file"
+include = [ "http.log" ]
+read_from = "beginning"
+ignore_checkpoints = true
+
+[transforms.pipe1]
+type = "remap"
+inputs = ["in"]
+source = '''
+# Parsing for JSON Logs
+        . = parse_json!(.message)
+# Cleaning up messages
+        del(.message)
+        .id.orig_h = ."id.orig_h"
+        .id.resp_h = ."id.resp_h"
+        .id.resp_p = ."id.resp_p"
+        .id.orig_p = ."id.orig_p"
+# Converting start from epoch to timestamp
+        .timestamp = to_timestamp!(.ts)
+        .timestamp_end = .timestamp
+# Setting our LogSlash timewindow to every minute on the minute based on the timestamp
+        .timewindow, err = format_timestamp(.timestamp, format: "%F%R")
+# Setting our LogSlash counter
+        .logslash = 1
+# Cleaning up epoch times
+        del(.ts)
+'''
+
+[transforms.pipe2]
+# Filtering out empty logs
+type = "filter"
+inputs = ["pipe1"]
+condition.type = "vrl"
+condition.source =  """
+        .uid != null
+"""
+
+[transforms.pipe3]
+type = "reduce"
+inputs = ["pipe2"]
+# Hold events in memory for 1 minute before moving to the next pipe
+#expire_after_ms = 60000
+# Defining the fields to deduplicate by, "timewindow" is required for LogSlash to function
+group_by = [ "timewindow", "id.orig_h", "id.resp_h", "id.resp_p", "method" ]
+# Performing transforms on the data to retain log value while reducing logs
+
+# Discarding all timestamps except for the first timestamp
+merge_strategies.timestamp = "discard"
+# Discarding all end timestamps except for the last timestamp
+merge_strategies.timestamp_end = "retain"
+merge_strategies.uid = "discard"
+# Discarding all srcport except for the first srcport
+merge_strategies."id.orig_p" = "discard"
+merge_strategies."id.resp_p" = "flat_unique"
+merge_strategies.method = "flat_unique"
+merge_strategies.host = "flat_unique"
+merge_strategies.uri = "flat_unique"
+merge_strategies.version = "flat_unique"
+merge_strategies.user_agent = "flat_unique"
+merge_strategies.request_body_len = "sum"
+merge_strategies.response_body_len = "sum"
+merge_strategies.status_code = "flat_unique"
+merge_strategies.status_msg = "flat_unique"
+merge_strategies.tags = "flat_unique"
+merge_strategies.orig_fuids = "flat_unique"
+merge_strategies.resp_fuids = "flat_unique"
+# Counting how many logs have been reduced by LogSlash
+merge_strategies.logslash = "sum"
+
+[transforms.pipe4]
+# Cleaning up the timewindow field
+type = "remap"
+inputs = ["pipe3"]
+source = '''
+        del(.timewindow)
+'''
+
+[sinks.out]
+# Define your output here. https://vector.dev/docs/reference/configuration/sinks/
+inputs = ["pipe4"]
+type = "console"
+encoding.codec = "json"
