@@ -46,8 +46,9 @@ condition.source =  """
 [transforms.pipe3]
 type = "reduce"
 inputs = ["pipe2"]
-# Hold events in memory for 1 minute before moving to the next pipe
-expire_after_ms = 60000
+# Hold events in memory for 1 minute before moving to the next pipe.
+# This setting is for streaming inputs. If you're running logslash on a flat file, this setting will delay the output by 1 minute. 
+#expire_after_ms = 60000
 # Defining the fields to deduplicate by, "timewindow" is required for LogSlash to function
 group_by = [ "timewindow", "srcaddr", "dstaddr", "dstport", "action" ]
 # Performing transforms on the data to retain log value while reducing logs
