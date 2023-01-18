@@ -1,8 +1,7 @@
-# Copywrite (c) 2023, FoxIO, LLC.
+# Copywrite (c) 2022, JA1, Inc.
 # All rights reserved.
-# US Patent No. 10,877,972
-# Licenced under the FoxIO License 1.0
-# For full license text, see LICENSE file in the repo root or https://github.com/FoxIO-LLC/LogSlash/blob/main/LICENSE
+# Licenced under Polyform Internal Use
+# For full license text, see LICENSE file in the repo root or https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Internal-Use-1.0.0.txt
 
 [sources.in]
 # Define your source here. https://vector.dev/docs/reference/configuration/sources/
@@ -45,8 +44,10 @@ condition.source =  """
 [transforms.pipe3]
 type = "reduce"
 inputs = ["pipe2"]
-# Hold events in memory for 1 minute before moving to the next pipe
-#expire_after_ms = 60000
+# Hold events in memory for 1 minute before moving to the next pipe.
+# This setting is for streaming inputs. If you are running logslash on a flat
+# file, this setting will delay the output by 1 minute.
+expire_after_ms = 60000
 # Defining the fields to deduplicate by, "timewindow" is required for LogSlash to function
 group_by = [ "timewindow", "id.orig_h", "id.resp_h", "id.resp_p", "version" ]
 # Performing transforms on the data to retain log value while reducing logs
