@@ -1,2 +1,0 @@
-# VPC Flow Logs
-
