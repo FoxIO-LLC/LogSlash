@@ -1,4 +1,4 @@
-# Copywrite (c) 2023, FoxIO, LLC.
+# Copyright (c) 2023, FoxIO, LLC.
 # All rights reserved.
 # US Patent No. 10,877,972
 # Licenced under the FoxIO License 1.0
@@ -46,9 +46,9 @@ condition.source =  """
 [transforms.pipe3]
 type = "reduce"
 inputs = ["pipe2"]
-# Hold events in memory for 1 minute before moving to the next pipe.
-# This setting is for streaming inputs. If you're running logslash on a flat file, this setting will delay the output by 1 minute. 
-#expire_after_ms = 60000
+# Setting "expire_after_ms = 10" can sometimes vastly improve performance against large flat files.
+# For streaming inputs, you'll want to use "expire_after_ms = 60000"
+# expire_after_ms = 10
 # Defining the fields to deduplicate by, "timewindow" is required for LogSlash to function
 group_by = [ "timewindow", "srcaddr", "dstaddr", "dstport", "action" ]
 # Performing transforms on the data to retain log value while reducing logs
