@@ -1,7 +1,8 @@
 # Copyright (c) 2023, FoxIO, LLC
 # All rights reserved.
-# Licenced under Polyform Internal Use
-# For full license text, see LICENSE file in the repo root or https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Internal-Use-1.0.0.txt
+# US Patent No. 10,877,972
+# Licenced under the FoxIO License 1.0
+# For full license text, see LICENSE file in the repo root or https://github.com/FoxIO-LLC/LogSlash/blob/main/LICENSE
 
 [sources.in]
 # Define your source here. https://vector.dev/docs/reference/configuration/sources/
