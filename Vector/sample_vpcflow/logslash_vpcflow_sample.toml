@@ -1,8 +1,11 @@
-# Copywrite (c) 2022, JA1, Inc.
+# Copyright (c) 2023, FoxIO, LLC.
 # All rights reserved.
-# Licenced under Polyform Internal Use
-# For full license text, see LICENSE file in the repo root or https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Internal-Use-1.0.0.txt
-
+# US Patent No. 10,877,972
+# Licenced under the FoxIO License 1.0
+# For full license text, see LICENSE file in the repo root or https://github.com/FoxIO-LLC/LogSlash/blob/main/LICENSE
+#
+# This script is designed for VPC Flow logs that are using the default log format.
+#
 [sources.in]
 # Define your source here. https://vector.dev/docs/reference/configuration/sources/
 type = "file"
@@ -43,8 +46,9 @@ condition.source =  """
 [transforms.pipe3]
 type = "reduce"
 inputs = ["pipe2"]
-# Hold events in memory for 1 minute before moving to the next pipe
-expire_after_ms = 60000
+# Setting "expire_after_ms = 10" can sometimes vastly improve performance against large flat files.
+# For streaming inputs, you'll want to use "expire_after_ms = 60000"
+# expire_after_ms = 10
 # Defining the fields to deduplicate by, "timewindow" is required for LogSlash to function
 group_by = [ "timewindow", "srcaddr", "dstaddr", "dstport", "action" ]
 # Performing transforms on the data to retain log value while reducing logs
@@ -76,4 +80,3 @@ source = '''
 inputs = ["pipe4"]
 type = "console"
 encoding.codec = "json"
-
