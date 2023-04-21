@@ -87,6 +87,8 @@ merge_strategies.logslash = "sum"
 type = "remap"
 inputs = ["pipe3"]
 source = '''
+        .rtt_total = .rtt
+        del(.rtt)
         del(.timewindow)
 '''
 

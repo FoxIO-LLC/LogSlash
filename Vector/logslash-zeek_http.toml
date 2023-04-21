@@ -81,7 +81,13 @@ merge_strategies.logslash = "sum"
 type = "remap"
 inputs = ["pipe3"]
 source = '''
+# Renaming sum merge strategies fields
+        .request_body_len_total = .request_body_len
+        .response_body_len_total = .response_body_len
+# Deleting old field names
         del(.timewindow)
+        del(.request_body_len)
+        del(.response_body_len)
 '''
 
 [sinks.out]

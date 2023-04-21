@@ -79,6 +79,24 @@ merge_strategies.logslash = "sum"
 type = "remap"
 inputs = ["pipe3"]
 source = '''
+# Renaming sum merge strategies fields
+        .duration_total = .duration
+        .orig_bytes_total = .orig_bytes
+        .resp_bytes_total = .resp_bytes
+        .missed_bytes_total = .missed_bytes
+        .orig_pkts_total = .orig_pkts
+        .orig_ip_bytes_total = .orig_ip_bytes
+        .resp_pkts_total = .resp_pkts
+        .resp_ip_bytes_total = .resp_ip_bytes
+# Deleting old field names
+        del(.duration)
+        del(.orig_bytes)
+        del(.resp_bytes)
+        del(.missed_bytes)
+        del(.orig_pkts)
+        del(.orig_ip_bytes)
+        del(.resp_pkts)
+        del(.resp_ip_bytes)
         del(.timewindow)
 '''
 
