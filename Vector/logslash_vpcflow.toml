@@ -72,7 +72,13 @@ merge_strategies.logslash = "sum"
 type = "remap"
 inputs = ["pipe3"]
 source = '''
+# Renaming sum merge strategies fields
+       .bytes_total = .bytes
+       .packets_total = .packets
+# Deleting old field names
         del(.timewindow)
+        del(.bytes)
+        del(.packets)
 '''
 
 [sinks.out]
