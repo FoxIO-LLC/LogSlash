@@ -1,4 +1,4 @@
-FoxIO License 1.0
+FoxIO License 1.1
 Licensor: FoxIO, LLC
 Software: LogSlash
 
@@ -12,12 +12,22 @@ In order to get any license under these terms, you must agree to them as both st
 and conditions to all your licenses.
 
 2. Copyright License
-The licensor grants you a copyright license to use and modify the software, only for 
-non-commercial purposes. The licensor grants you a copyright license to distribute the software 
-to others only for non-commercial purposes. You must ensure that anyone who gets a copy of any 
-part of the software from you also gets a copy of these license terms or the following URL 
-https://github.com/FoxIO-LLC/LogSlash/blob/main/LICENSE, and you must retain all copyright, 
-patent or other intellectual property notices placed on the software by licensor. 
+The licensor grants you a copyright license to use and modify the software, only for non-commercial 
+purposes. The licensor grants you a copyright license to distribute the software to others 
+only for non-commercial purposes. “Non-commercial purposes” include personal use by an individual, 
+academic research and development, and testing and evaluation of the software for your own 
+internal use, and excludes any use for which you charge fees or anything else of value, 
+directly or indirectly, for use of or access to the software. Using the software for your own 
+internal business purposes in a manner where you do not directly monetize the software is a 
+non-commercial purpose. Providing the software on a hosted or managed service basis to others 
+is not a non-commercial purpose. Providing maintenance, support or development services for 
+the software to others, or using the software to enable others to provide such services for 
+the software to you, is not a non-commercial purpose.
+
+You must ensure that anyone who gets a copy of any part of the software from you also gets a 
+copy of these license terms or the following URL https://github.com/FoxIO-LLC/LogSlash/blob/main/LICENSE, 
+and you must retain all copyright, patent or other intellectual property notices placed on 
+the software by licensor. 
 
 3. Patent License
 The licensor grants you a patent license for the software that covers patent claims the 
@@ -55,15 +65,6 @@ of the software, under any kind of legal claim.
 9. Definitions
 The “Licensor” is the individual or entity offering these terms, and the “Software” is the 
 software the licensor makes available under these terms.
-
-“Non-commercial purposes” include personal use by an individual, academic research and development, 
-and testing and evaluation of the software for your own internal use, and excludes any use for 
-which you charge fees or anything else of value, directly or indirectly, for use of or access to 
-the software. Using the software for your own internal business purposes in a manner where you do 
-not directly monetize the software is a non-commercial purpose. Providing the software on a hosted 
-or managed service basis to others is not a non-commercial purpose. Providing maintenance, support 
-or development services for the software to others, or using the software to enable others to 
-provide such services for the software to you, is not a non-commercial purpose.
 
 “You” refers to the individual or entity agreeing to these terms.
 
