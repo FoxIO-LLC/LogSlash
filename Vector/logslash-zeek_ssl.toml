@@ -7,7 +7,7 @@
 [sources.in]
 # Define your source here. https://vector.dev/docs/reference/configuration/sources/
 type = "file"
-include = [ "ssl.log" ]
+include = [ "/usr/local/zeek/spool/zeek/json_streaming_ssl.log" ]
 read_from = "beginning"
 ignore_checkpoints = true
 
@@ -24,7 +24,7 @@ source = '''
         .id.resp_p = ."id.resp_p"
         .id.orig_p = ."id.orig_p"
 # Converting start from epoch to timestamp
-        .timestamp = to_timestamp!(.ts)
+        .timestamp = parse_timestamp!(.ts, format: "%Y-%m-%dT%H:%M:%S%.fZ")
         .timestamp_end = .timestamp
 # Setting our LogSlash timewindow to every minute on the minute based on the timestamp
         .timewindow, err = format_timestamp(.timestamp, format: "%F%R")
