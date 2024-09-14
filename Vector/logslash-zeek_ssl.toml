@@ -4,16 +4,16 @@
 # Licenced under the FoxIO License 1.0
 # For full license text, see LICENSE file in the repo root or https://github.com/FoxIO-LLC/LogSlash/blob/main/LICENSE
 
-[sources.in]
+[sources.in_ssl]
 # Define your source here. https://vector.dev/docs/reference/configuration/sources/
 type = "file"
 include = [ "/usr/local/zeek/spool/zeek/json_streaming_ssl.log" ]
 read_from = "beginning"
 ignore_checkpoints = true
 
-[transforms.pipe1]
+[transforms.pipe1_ssl]
 type = "remap"
-inputs = ["in"]
+inputs = ["in_ssl"]
 source = '''
 # Parsing for JSON Logs
         . = parse_json!(.message)
@@ -34,17 +34,17 @@ source = '''
         del(.ts)
 '''
 
-[transforms.pipe2]
+[transforms.pipe2_ssl]
 # Filtering out empty logs
 type = "filter"
-inputs = ["pipe1"]
+inputs = ["pipe1_ssl"]
 condition.type = "vrl"
 condition.source =  """
         .uid != null
 """
-[transforms.pipe3]
+[transforms.pipe3_ssl]
 type = "reduce"
-inputs = ["pipe2"]
+inputs = ["pipe2_ssl"]
 # Setting "expire_after_ms = 10" can sometimes vastly improve performance against large flat files.
 # For streaming inputs, you'll want to use "expire_after_ms = 60000" which will hold events in memory for 1 minute.
 # expire_after_ms = 10
@@ -76,16 +76,16 @@ merge_strategies.logslash = "sum"
 
 
 
-[transforms.pipe4]
+[transforms.pipe4_ssl]
 # Cleaning up the timewindow field
 type = "remap"
-inputs = ["pipe3"]
+inputs = ["pipe3_ssl"]
 source = '''
         del(.timewindow)
 '''
 
-[sinks.out]
+[sinks.out_ssl]
 # Define your output here. https://vector.dev/docs/reference/configuration/sinks/
-inputs = ["pipe4"]
+inputs = ["pipe4_ssl"]
 type = "console"
 encoding.codec = "json"
