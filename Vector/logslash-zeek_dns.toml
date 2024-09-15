@@ -27,7 +27,7 @@ source = '''
         .timestamp = parse_timestamp!(.ts, format: "%Y-%m-%dT%H:%M:%S%.fZ")
         # .timestamp_end = .timestamp
 # Setting our LogSlash timewindow to every minute on the minute based on the timestamp
-        .timewindow = format_timestamp(.timestamp, format: "%F%R")
+        .timewindow, err = format_timestamp(.timestamp, format: "%F%R")
 # Setting our LogSlash counter
         .logslash = 1
 # Cleaning up epoch times
