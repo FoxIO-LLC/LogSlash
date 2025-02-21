@@ -4,16 +4,16 @@
 # Licenced under the FoxIO License 1.0
 # For full license text, see LICENSE file in the repo root or https://github.com/FoxIO-LLC/LogSlash/blob/main/LICENSE
 
-[sources.in]
+[sources.in_conn]
 # Define your source here. https://vector.dev/docs/reference/configuration/sources/
 type = "file"
-include = [ "conn.log" ]
+include = [ "/usr/local/zeek/spool/zeek/json_streaming_conn.log" ]
 read_from = "beginning"
 ignore_checkpoints = true
 
-[transforms.pipe1]
+[transforms.pipe1_conn]
 type = "remap"
-inputs = ["in"]
+inputs = ["in_conn"]
 source = '''
 # Parsing for JSON Logs
         . = parse_json!(.message)
@@ -24,7 +24,7 @@ source = '''
         .id.resp_p = ."id.resp_p"
         .id.orig_p = ."id.orig_p"
 # Converting start from epoch to timestamp
-        .timestamp = to_timestamp!(.ts)
+        .timestamp = parse_timestamp!(.ts, format: "%Y-%m-%dT%H:%M:%S%.fZ")
         .timestamp_end = .timestamp
 # Setting our LogSlash timewindow to every minute on the minute based on the timestamp
         .timewindow, err = format_timestamp(.timestamp, format: "%F%R")
@@ -34,18 +34,18 @@ source = '''
         del(.ts)
 '''
 
-[transforms.pipe2]
+[transforms.pipe2_conn]
 # Filtering out empty logs
 type = "filter"
-inputs = ["pipe1"]
+inputs = ["pipe1_conn"]
 condition.type = "vrl"
 condition.source =  """
         .uid != null
 """
 
-[transforms.pipe3]
+[transforms.pipe3_conn]
 type = "reduce"
-inputs = ["pipe2"]
+inputs = ["pipe2_conn"]
 # Setting "expire_after_ms = 10" can sometimes vastly improve performance against large flat files.
 # For streaming inputs, you'll want to use "expire_after_ms = 60000" which will hold events in memory for 1 minute.
 # expire_after_ms = 10
@@ -74,10 +74,10 @@ merge_strategies.conn_state = "flat_unique"
 # Counting how many logs have been reduced by LogSlash
 merge_strategies.logslash = "sum"
 
-[transforms.pipe4]
+[transforms.pipe4_conn]
 # Cleaning up the timewindow field
 type = "remap"
-inputs = ["pipe3"]
+inputs = ["pipe3_conn"]
 source = '''
 # Renaming sum merge strategies fields
         .duration_total = .duration
@@ -100,8 +100,8 @@ source = '''
         del(.timewindow)
 '''
 
-[sinks.out]
+[sinks.out_conn]
 # Define your output here. https://vector.dev/docs/reference/configuration/sinks/
-inputs = ["pipe4"]
+inputs = ["pipe4_conn"]
 type = "console"
 encoding.codec = "json"
